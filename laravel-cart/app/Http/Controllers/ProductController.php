@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -24,9 +25,10 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
-    public function store(Request $request): ProductResource
+    public function store(ProductStoreRequest $request): ProductResource
     {
-        $product = $request->all();
+        $product = $request->validated();
+        dd($product);
         $this->model->create($product);
         return new ProductResource($product);
     }
@@ -37,7 +39,7 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function update(Request $request, string $id): ProductResource
+    public function update(ProductUpdateRequest $request, string $id): ProductResource
     {
         $product = $this->model->findOrFail($id);
         $data = $request->all();
