@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
@@ -16,26 +18,26 @@ class ProductController extends Controller
         //
     }
 
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $products = $this->model->all();
         return ProductResource::collection($products);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): ProductResource
     {
         $product = $request->all();
         $this->model->create($product);
         return new ProductResource($product);
     }
 
-    public function show(string $id)
+    public function show(string $id): ProductResource
     {
         $product = $this->model->findOrFail($id);
         return new ProductResource($product);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): ProductResource
     {
         $product = $this->model->findOrFail($id);
         $data = $request->all();
@@ -43,7 +45,7 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         $product = $this->model->findOrFail($id);
         $product->delete();
