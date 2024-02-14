@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Services\Contracts\ProductServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductService implements ProductServiceInterface
 {
     public function __construct(
-        protected Product $model,
+        protected ProductRepositoryInterface $poductRepository,
     )
     {
         //
@@ -17,29 +18,28 @@ class ProductService implements ProductServiceInterface
 
     public function getAllProducts(): Collection
     {
-        return $this->model->all();
+        return $this->poductRepository->getAllProducts();
     }
 
     public function findOneProduct(string $id): Product
     {
-        return $this->model->findOrFail($id);
+        return $this->poductRepository->findOneProduct($id);
     }
 
     public function createProduct(array $values): Product
     {
-        return $this->model->create($values);
+        return $this->poductRepository->storeProduct($values);
     }
 
     public function updateProduct(string $id, array $values): Product
     {
-        $product = $this->model->findOrFail($id);
-        $product->update($values);
+        $product = $this->poductRepository->updateProduct($id, $values);
         return $product;
     }
 
     public function deleteProduct(string $id): void
     {
-        $this->model->findOrFail($id)->delete();
+        $this->poductRepository->deleteProduct($id);
     }
 
 }
