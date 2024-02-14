@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,20 +19,20 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->model->all();
-        return $products;
+        return ProductResource::collection($products);
     }
 
     public function store(Request $request)
     {
         $product = $request->all();
         $this->model->create($product);
-        return $product;
+        return new ProductResource($product);
     }
 
     public function show(string $id)
     {
         $product = $this->model->findOrFail($id);
-        return $product;
+        return new ProductResource($product);
     }
 
     public function update(Request $request, string $id)
@@ -39,7 +40,7 @@ class ProductController extends Controller
         $product = $this->model->findOrFail($id);
         $data = $request->all();
         $product->update($data);
-        return $product;
+        return new ProductResource($product);
     }
 
     public function destroy(string $id)
